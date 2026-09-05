@@ -1,6 +1,12 @@
 # hermes-agent
 
+<img src="docs/icon-agent.png" alt="Hermes" width="120">
+
 Agente pessoal self-hosted ([Hermes Agent](https://github.com/NousResearch/hermes-agent), Nous Research) rodando numa VM Azure, acessível via Slack. Contexto completo das decisões em [`docs/plan.md`](docs/plan.md).
+
+## Stacks/Ferramentas
+
+![Stacks](https://skillicons.dev/icons?i=kubernetes,docker,aws,azure,javascript,git,github,linux,python,terraform)
 
 ## Stack
 
