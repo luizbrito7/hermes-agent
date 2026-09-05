@@ -19,6 +19,6 @@ tfplan
 .env
 !.env.example
 
-# hermes runtime state — só config.yaml é declarativo, resto é gerado em runtime
-compose/data/*
-!compose/data/config.yaml
+# estado mutável de cada serviço em compose/<serviço>/data — só config.yaml é declarativo
+compose/*/data/*
+!compose/*/data/config.yaml
