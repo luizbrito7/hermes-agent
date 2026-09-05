@@ -1,5 +1,7 @@
+_config_version: 12
+
 model:
   provider: nvidia
-  default: nvidia/llama-3.3-70b-instruct
+  default: moonshotai/kimi-k3
   base_url: ''
   api_mode: chat_completions
