@@ -1,0 +1,5 @@
+model:
+  provider: nvidia
+  default: nvidia/llama-3.3-70b-instruct
+  base_url: ''
+  api_mode: chat_completions
