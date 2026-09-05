@@ -6,7 +6,7 @@ Agente pessoal self-hosted ([Hermes Agent](https://github.com/NousResearch/herme
 
 ## Stacks/Ferramentas
 
-![Stacks](https://skillicons.dev/icons?i=kubernetes,docker,aws,azure,javascript,git,github,linux,python,terraform)
+![Stacks](https://skillicons.dev/icons?i=docker,azure,terraform,git,github,linux,python,bash)
 
 ## Stack
 
