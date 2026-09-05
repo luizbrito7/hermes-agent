@@ -1,0 +1,3 @@
+#!/bin/sh
+# Bloqueia commit se houver segredo no staged diff. Setup: git config core.hooksPath .githooks
+gitleaks protect --staged -v
