@@ -1,7 +1,7 @@
 _config_version: 12
 
 model:
-  provider: nvidia
-  default: moonshotai/kimi-k3
+  provider: gemini
+  default: gemini-flash-lite-latest
   base_url: ''
   api_mode: chat_completions
