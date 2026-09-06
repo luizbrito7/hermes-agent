@@ -19,6 +19,7 @@
 - Todo commit passa pelo hook `gitleaks` (`.githooks/pre-commit`, já ativo).
 - VM: `hermes@20.226.91.125`, chave `~/.ssh/hermes_vm`, repo clonado em `/opt/hermes/hermes-agent`. Deploy = `git pull` na VM + `docker compose -f compose/docker-compose.yml up -d`.
 - Escopo OAuth: só `sheets` (nem `gmail`, `calendar`, `drive`, `docs`).
+- Mensagens de commit seguem [Conventional Commits](https://github.com/iuricode/padroes-de-commits) — `tipo: descrição curta` (`feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`...) — **sem emoji**, apesar do guia recomendar. Todo commit desta sessão já seguiu esse padrão.
 - Commits terminam com `Claude-Session: https://claude.ai/code/session_019oprrzCpWHbdKnxZrKcDgu`.
 
 ---
