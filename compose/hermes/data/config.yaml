@@ -18,6 +18,8 @@ platforms:
 skills:
   external_dirs:
     - /opt/custom-skills
+stt:
+  provider: local
 
 # ── Security ──────────────────────────────────────────────────────────
 # Secret redaction is ON by default — strings that look like API keys,
