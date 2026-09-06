@@ -12,7 +12,7 @@ Agente de IA self-hosted para automatizar rotinas pessoais, acessível por chat 
 |---|---|
 | Agente | Hermes Agent (Nous Research), open source, self-hosted |
 | Canal | Slack (Socket Mode, free tier) |
-| LLM | NVIDIA NIM (`build.nvidia.com`), free tier, endpoint compatível com OpenAI |
+| LLM | Google Gemini (`gemini-flash-lite-latest`), free tier — trocado de NVIDIA NIM por latência alta |
 | Runtime | Docker |
 | Infra | VM na Azure (créditos existentes) |
 | IaC | Terraform, state no HCP Terraform |
@@ -35,7 +35,7 @@ State remoto no HCP Terraform desde o dia um (locking e histórico sem manter bu
 - Registro de entradas e saídas via chat no Slack (texto ou áudio).
 - Acompanhamento de gastos e recorrências dentro do mês.
 - Planilha no Google Sheets: abas de lançamentos, recorrentes e saldo.
-- Acesso via service account.
+- Acesso via OAuth2 (skill `google-workspace` do Hermes) — não service account: o skill nativo não suporta service account, e escrever um script custom pra isso ia contra o princípio de menos-é-mais.
 
 ### Fase 2: Agenda
 - Blocos recorrentes de treino e estudo no Google Calendar.
@@ -57,15 +57,15 @@ State remoto no HCP Terraform desde o dia um (locking e histórico sem manter bu
 | WhatsApp Cloud API (Meta) | Burocracia: verificação de negócio, número dedicado, janela de 24h. |
 | WhatsApp via Baileys | Não oficial, risco de ban. Slack cobre o caso de uso. |
 | SQLite local para finanças | Sheets dá visibilidade direta sem depender do agente para consultar. |
-| Modelo local (Ollama) | NVIDIA free tier (40 RPM) cobre o volume sem custo de hardware. |
+| Modelo local (Ollama) | Free tier de LLM em nuvem (Gemini) cobre o volume sem custo de hardware. |
 
 ## Pontos de atenção
 
-- NVIDIA free tier: limite de 40 requisições por minuto. Folgado para o volume previsto, mas o free tier pode mudar.
+- Gemini free tier: ~15-30 RPM e ~1000 requisições/dia dependendo do modelo. Folgado para o volume previsto, mas o free tier pode mudar.
 - Slack free tier: histórico visível de 90 dias. Irrelevante, já que o Hermes tem memória própria.
-- Áudio: transcrição via `faster-whisper` local ou gateway da Nous. Definir na Fase 1.
-- Credenciais (token Slack, chave NVIDIA, service account do Google) fora do repositório.
+- Áudio: `faster-whisper` local (decidido) — precisa de imagem Docker derivada, não vem instalado na imagem oficial.
+- Credenciais (tokens Slack, chave Gemini, client secret + token OAuth do Google) fora do repositório.
 
 ## Próximo passo
 
-Fase 1, etapa de infra: Terraform da VM Azure com state no HCP, cloud-init subindo Docker e Hermes, validação do agente pelo CLI antes de conectar o Slack.
+Infra e runtime da Fase 1 concluídos: VM Azure via Terraform, Hermes rodando em Docker Compose, conectado ao Slack, validado via CLI antes do Slack. Em andamento: feature de Finanças (skill customizado, planilha, OAuth2 do Google já autorizado) — ver `docs/superpowers/plans/2026-09-05-financas-implementation.md`.

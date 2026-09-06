@@ -95,10 +95,12 @@ Anotar o `spreadsheetId` do JSON retornado. Depois, adicionar as outras duas aba
 SHEET_ID="<spreadsheetId do Step 7>"
 ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'lancamentos!A1:E1' --values '[[\"data\",\"descricao\",\"valor\",\"categoria\",\"tipo\"]]'"
 ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'recorrentes!A1:C1' --values '[[\"descricao\",\"valor\",\"dia_do_mes\"]]'"
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'saldo!A1:B2' --values '[[\"saldo_inicial\",0],[\"saldo_atual\",\"=A2+SUMIF(lancamentos!E:E,\\\"entrada\\\",lancamentos!C:C)-SUMIF(lancamentos!E:E,\\\"saida\\\",lancamentos!C:C)\"]]'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'saldo!A1:B2' --values '[[\"saldo_inicial\",0],[\"saldo_atual\",\"=B1+SUMIF(lancamentos!E:E;\\\"entrada\\\";lancamentos!C:C)-SUMIF(lancamentos!E:E;\\\"saida\\\";lancamentos!C:C)\"]]'"
 ```
 
 Ajustar `saldo_inicial` (célula `B1`) pro valor real informado pelo usuário.
+
+**Nota de execução real:** a planilha usa locale pt-BR — fórmulas exigem `;` como separador de argumento, não `,`. O comando acima já reflete isso (corrigido após um `#ERROR!` na primeira tentativa com vírgula). Spreadsheet ID real usado nesta execução: `1aG2HwBcwWhWTf_lAT-4Gij-njB3EGoxsJ-mrMxyV7Sw`, `saldo_inicial` = `83.02`.
 
 - [ ] **Step 9: Atualizar `docs/plan.md` com a decisão de auth**
 
@@ -167,7 +169,7 @@ Spreadsheet ID: `SPREADSHEET_ID_AQUI`
 |---|---|
 | `lancamentos` | data, descricao, valor, categoria, tipo (`entrada` ou `saida`) |
 | `recorrentes` | descricao, valor, dia_do_mes |
-| `saldo` | só leitura — `A2` é o saldo inicial, `B2` é a fórmula de saldo atual. Nunca escrever aqui. |
+| `saldo` | só leitura — `B1` é o saldo inicial, `B2` é a fórmula de saldo atual. Nunca escrever aqui. |
 
 ## Regras
 
