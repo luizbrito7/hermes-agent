@@ -24,3 +24,4 @@ compose/*/data/*
 !compose/*/data/config.yaml
 
 .worktrees/
+.claude
