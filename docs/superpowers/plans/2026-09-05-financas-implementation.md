@@ -35,7 +35,7 @@
 - [ ] **Step 1: Checar se já tem client OAuth configurado**
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/setup.py --check"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/setup.py --check"
 ```
 
 Esperado: `NOT_AUTHENTICATED` (primeira vez).
@@ -56,13 +56,13 @@ Copiar o JSON baixado pra dentro do volume montado e rodar o setup (caminho loca
 
 ```bash
 scp -i ~/.ssh/hermes_vm <caminho_local_do_json> hermes@20.226.91.125:/tmp/gws-client-secret.json
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker cp /tmp/gws-client-secret.json hermes:/tmp/gws-client-secret.json && docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/setup.py --client-secret /tmp/gws-client-secret.json && rm /tmp/gws-client-secret.json"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker cp /tmp/gws-client-secret.json hermes:/tmp/gws-client-secret.json && docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/setup.py --client-secret /tmp/gws-client-secret.json && rm /tmp/gws-client-secret.json"
 ```
 
 - [ ] **Step 4: Gerar URL de autorização (escopo só `sheets`)**
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/setup.py --auth-url --services sheets --format json"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/setup.py --auth-url --services sheets --format json"
 ```
 
 Extrair o campo `auth_url` da resposta, mandar pro usuário abrir no navegador, autorizar, e copiar a URL de redirect completa (vai falhar em `localhost` — isso é esperado, só copiar a URL da barra de endereço mesmo assim).
@@ -70,13 +70,13 @@ Extrair o campo `auth_url` da resposta, mandar pro usuário abrir no navegador, 
 - [ ] **Step 5: Trocar o código pela credencial**
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/setup.py --auth-code 'URL_OU_CODIGO_COLADO_PELO_USUARIO' --format json"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/setup.py --auth-code 'URL_OU_CODIGO_COLADO_PELO_USUARIO' --format json"
 ```
 
 - [ ] **Step 6: Confirmar autenticação**
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/setup.py --check"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/setup.py --check"
 ```
 
 Esperado: `AUTHENTICATED`.
@@ -84,7 +84,7 @@ Esperado: `AUTHENTICATED`.
 - [ ] **Step 7: Criar a spreadsheet com as 3 abas**
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets create --title 'Financas Hermes' --sheet-name 'lancamentos'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets create --title 'Financas Hermes' --sheet-name 'lancamentos'"
 ```
 
 Anotar o `spreadsheetId` do JSON retornado. Depois, adicionar as outras duas abas — o comando `sheets create` só cria uma; usar a API do Sheets pra `batchUpdate` não é exposto pelo wrapper, então criar `recorrentes` e `saldo` manualmente pela UI do Sheets (abrir o link `spreadsheetUrl` retornado, botão "+" no rodapé, renomear aba) é mais simples que contornar o wrapper — YAGNI, é uma ação de 30 segundos feita uma vez.
@@ -93,9 +93,9 @@ Anotar o `spreadsheetId` do JSON retornado. Depois, adicionar as outras duas aba
 
 ```bash
 SHEET_ID="<spreadsheetId do Step 7>"
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'lancamentos!A1:E1' --values '[[\"data\",\"descricao\",\"valor\",\"categoria\",\"tipo\"]]'"
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'recorrentes!A1:C1' --values '[[\"descricao\",\"valor\",\"dia_do_mes\"]]'"
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'saldo!A1:B2' --values '[[\"saldo_inicial\",0],[\"saldo_atual\",\"=A2+SUMIF(lancamentos!E:E,\\\"entrada\\\",lancamentos!C:C)-SUMIF(lancamentos!E:E,\\\"saida\\\",lancamentos!C:C)\"]]'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'lancamentos!A1:E1' --values '[[\"data\",\"descricao\",\"valor\",\"categoria\",\"tipo\"]]'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'recorrentes!A1:C1' --values '[[\"descricao\",\"valor\",\"dia_do_mes\"]]'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets update $SHEET_ID 'saldo!A1:B2' --values '[[\"saldo_inicial\",0],[\"saldo_atual\",\"=A2+SUMIF(lancamentos!E:E,\\\"entrada\\\",lancamentos!C:C)-SUMIF(lancamentos!E:E,\\\"saida\\\",lancamentos!C:C)\"]]'"
 ```
 
 Ajustar `saldo_inicial` (célula `B1`) pro valor real informado pelo usuário.
@@ -174,25 +174,25 @@ Spreadsheet ID: `SPREADSHEET_ID_AQUI`
 1. **Mensagem em `#hermes-financas` descrevendo um gasto ou receita** (texto ou áudio já transcrito): extrair `data` (default: hoje), `descricao`, `valor`, `categoria` (inferida da descrição, texto livre — sem lista fixa) e `tipo` (`entrada` ou `saida`). Mostrar pro usuário exatamente o que vai gravar e pedir confirmação antes de escrever. Só depois da confirmação, rodar:
 
    ```bash
-   python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets append SPREADSHEET_ID_AQUI "lancamentos!A:E" --values '[["<data>","<descricao>","<valor>","<categoria>","<tipo>"]]'
+   python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets append SPREADSHEET_ID_AQUI "lancamentos!A:E" --values '[["<data>","<descricao>","<valor>","<categoria>","<tipo>"]]'
    ```
 
 2. **Pergunta sobre saldo** ("quanto tenho", "qual meu saldo"): ler a aba `saldo` e responder com o valor de `B2`.
 
    ```bash
-   python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets get SPREADSHEET_ID_AQUI "saldo!A1:B2"
+   python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets get SPREADSHEET_ID_AQUI "saldo!A1:B2"
    ```
 
 3. **Pergunta sobre gastos** ("quanto gastei esse mês", "meus gastos com mercado"): ler a aba `lancamentos` e filtrar/somar na resposta (a leitura retorna todas as linhas — filtrar em texto, não existe query server-side no Sheets via este wrapper).
 
    ```bash
-   python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets get SPREADSHEET_ID_AQUI "lancamentos!A:E"
+   python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets get SPREADSHEET_ID_AQUI "lancamentos!A:E"
    ```
 
 4. **Usuário descreve algo como recorrente** ("aluguel 1500 todo dia 5", "netflix 55 todo mês dia 10"): extrair `descricao`, `valor`, `dia_do_mes`, confirmar, e gravar em `recorrentes` — **nunca** em `lancamentos`:
 
    ```bash
-   python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets append SPREADSHEET_ID_AQUI "recorrentes!A:C" --values '[["<descricao>","<valor>","<dia_do_mes>"]]'
+   python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets append SPREADSHEET_ID_AQUI "recorrentes!A:C" --values '[["<descricao>","<valor>","<dia_do_mes>"]]'
    ```
 
 5. **Nunca escrever na aba `saldo`** — ela só tem fórmula, calculada pelo próprio Sheets.
@@ -367,7 +367,7 @@ No Slack, em `#hermes-financas`, mandar: `gastei 50 no mercado hoje`. Confirmar 
 
 ```bash
 SHEET_ID="<spreadsheetId>"
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets get $SHEET_ID 'lancamentos!A:E'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets get $SHEET_ID 'lancamentos!A:E'"
 ```
 
 Esperado: nova linha com `saida`, valor `50`, categoria plausível (ex. "mercado" ou "alimentação").
@@ -381,7 +381,7 @@ Mandar um áudio no mesmo canal dizendo algo equivalente ("recebi 200 de freelan
 Mandar `quanto tenho de saldo?`. Esperado: o agente responde com o valor de `saldo!B2`, batendo com:
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets get $SHEET_ID 'saldo!A1:B2'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets get $SHEET_ID 'saldo!A1:B2'"
 ```
 
 - [ ] **Step 5: Registro de recorrente**
@@ -389,7 +389,7 @@ ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/her
 Mandar `aluguel 1500 todo dia 5`. Confirmar. Checar que caiu em `recorrentes`, não em `lancamentos`:
 
 ```bash
-ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/hermes/skills/productivity/google-workspace/scripts/google_api.py sheets get $SHEET_ID 'recorrentes!A:C'"
+ssh -i ~/.ssh/hermes_vm hermes@20.226.91.125 "docker exec hermes python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets get $SHEET_ID 'recorrentes!A:C'"
 ```
 
 - [ ] **Step 6: Simular o lembrete de recorrente (sem esperar o dia real)**
