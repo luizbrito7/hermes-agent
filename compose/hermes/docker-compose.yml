@@ -6,6 +6,7 @@ services:
     command: gateway run
     volumes:
       - ./data:/opt/data
+      - ./custom-skills:/opt/custom-skills:ro
     env_file:
       - .env
     environment:

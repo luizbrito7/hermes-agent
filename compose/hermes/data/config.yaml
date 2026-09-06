@@ -15,6 +15,9 @@ platforms:
       name: D0BVA6KBCL9
       user_id: U0C0NJV426L
       scope_id: T0BV20WFC91
+skills:
+  external_dirs:
+    - /opt/custom-skills
 
 # ── Security ──────────────────────────────────────────────────────────
 # Secret redaction is ON by default — strings that look like API keys,
