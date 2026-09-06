@@ -8,3 +8,6 @@ services:
       - ./data:/opt/data
     env_file:
       - .env
+    environment:
+      - HERMES_UID=${HERMES_UID:-1000}
+      - HERMES_GID=${HERMES_GID:-1000}
