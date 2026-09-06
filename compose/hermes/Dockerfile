@@ -1,4 +1,4 @@
 FROM nousresearch/hermes-agent:latest
 USER root
-RUN /opt/hermes/.venv/bin/pip install faster-whisper
+RUN uv pip install --python /opt/hermes/.venv/bin/python3 faster-whisper
 USER hermes
