@@ -22,3 +22,5 @@ tfplan
 # estado mutável de cada serviço em compose/<serviço>/data — só config.yaml é declarativo
 compose/*/data/*
 !compose/*/data/config.yaml
+
+.worktrees/
