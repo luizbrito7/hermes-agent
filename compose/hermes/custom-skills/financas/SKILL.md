@@ -27,7 +27,7 @@ Spreadsheet ID: `1aG2HwBcwWhWTf_lAT-4Gij-njB3EGoxsJ-mrMxyV7Sw`
 
 ## Regras
 
-1. **Mensagem em `#hermes-financas` descrevendo um gasto ou receita** (texto ou áudio já transcrito): extrair `data` (default: hoje), `descricao`, `valor`, `categoria` (inferida da descrição, texto livre — sem lista fixa) e `tipo` (`entrada` ou `saida`). Mostrar pro usuário exatamente o que vai gravar e pedir confirmação antes de escrever. Só depois da confirmação, rodar:
+1. **Mensagem em `#hermes-financas` descrevendo um gasto ou receita** (texto ou áudio já transcrito): extrair `descricao`, `valor`, `categoria` (inferida da descrição, texto livre — sem lista fixa) e `tipo` (`entrada` ou `saida`). Se o usuário não mencionar uma data específica, use a data de hoje — **nunca adivinhe ou infira a data**; rode `date +%F` no terminal pra pegar a data real do sistema antes de montar o valor de `data`. Mostrar pro usuário exatamente o que vai gravar (incluindo a data) e pedir confirmação antes de escrever. Só depois da confirmação, rodar:
 
    ```bash
    python /opt/data/skills/productivity/google-workspace/scripts/google_api.py sheets append 1aG2HwBcwWhWTf_lAT-4Gij-njB3EGoxsJ-mrMxyV7Sw "lancamentos!A:E" --values '[["<data>","<descricao>","<valor>","<categoria>","<tipo>"]]'
